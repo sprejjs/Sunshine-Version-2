@@ -17,10 +17,12 @@ package com.example.android.sunshine.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -42,7 +44,7 @@ import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
-public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private ForecastAdapter mForecastAdapter;
 
@@ -84,6 +86,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_WEATHER_CONDITION_ID = 6;
     static final int COL_COORD_LAT = 7;
     static final int COL_COORD_LONG = 8;
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(getString(R.string.pref_last_location_status))){
+            updateEmptyView();
+        }
+    }
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -272,14 +281,38 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             TextView tv = (TextView)getActivity().findViewById(R.id.fragment_main_lbl_no_data);
             int errorMessage = R.string.fragment_main_err_no_data;
 
-            if(!Utility.isNetworkAvailable(getActivity())) {
-                errorMessage = R.string.fragment_main_err_no_connection;
+            switch (Utility.getLocationStatus(getActivity())) {
+                case SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
+                    errorMessage = R.string.fragment_main_err_server_error;
+                    break;
+                case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
+                    errorMessage = R.string.fragment_main_err_server_down;
+                    break;
+                default:
+                    if(!Utility.isNetworkAvailable(getActivity())) {
+                        errorMessage = R.string.fragment_main_err_no_connection;
+                    }
+                    break;
             }
 
             if(tv!=null) {
                 tv.setText(errorMessage);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
