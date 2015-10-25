@@ -15,8 +15,10 @@
  */
 package com.example.android.sunshine.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
@@ -258,6 +261,24 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.
             mListView.smoothScrollToPosition(mPosition);
+        }
+
+        updateEmptyView();
+    }
+
+    private void updateEmptyView(){
+        //Display an error message if the cursor is empty
+        if(mForecastAdapter.getCount() == 0) {
+            TextView tv = (TextView)getActivity().findViewById(R.id.fragment_main_lbl_no_data);
+            int errorMessage = R.string.fragment_main_err_no_data;
+
+            if(!Utility.isNetworkAvailable(getActivity())) {
+                errorMessage = R.string.fragment_main_err_no_connection;
+            }
+
+            if(tv!=null) {
+                tv.setText(errorMessage);
+            }
         }
     }
 

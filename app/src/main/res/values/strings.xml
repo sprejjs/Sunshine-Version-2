@@ -96,5 +96,6 @@
 
     <!--Error labels-->
     <string name="fragment_main_err_no_data">No Weather Information Available</string>
+    <string name="fragment_main_err_no_connection">No Weather Information Available. The network connection is not available to fetch weather data.</string>
 
 </resources>
