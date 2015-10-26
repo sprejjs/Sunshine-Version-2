@@ -11,8 +11,7 @@
         android:divider="@null" />
 
     <TextView
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:padding="16dp"
         android:gravity="center"
         android:id="@+id/fragment_main_lbl_no_data"
         android:text="@string/fragment_main_err_no_data"
