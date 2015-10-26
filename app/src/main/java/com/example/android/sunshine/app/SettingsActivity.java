@@ -17,12 +17,15 @@ package com.example.android.sunshine.app;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.
@@ -33,7 +36,7 @@ import android.preference.PreferenceManager;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends PreferenceActivity
-        implements Preference.OnPreferenceChangeListener {
+        implements Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,14 +84,47 @@ public class SettingsActivity extends PreferenceActivity
             }
         } else {
             // For other preferences, set the summary to the value's simple string representation.
-            preference.setSummary(stringValue);
+            if(preference.getKey().equals(getString(R.string.pref_location_key))) {
+                String message = stringValue;
+                switch (Utility.getLocationStatus(this)) {
+                    case SunshineSyncAdapter.LOCATION_STATUS_INVALID:
+                        message = String.format(getString(R.string.pref_location_error_description), stringValue);
+                        break;
+                    case SunshineSyncAdapter.LOCATION_STATUS_UNKNOWN:
+                        message = String.format(getString(R.string.pref_location_unknown_description), stringValue);
+                        break;
+                }
+                preference.setSummary(message);
+            } else {
+                preference.setSummary(stringValue);
+            }
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public Intent getParentActivityIntent() {
         return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_last_location_status))) {
+            Preference locationPreference = findPreference(getString(R.string.pref_location_key));
+            bindPreferenceSummaryToValue(locationPreference);
+        }
     }
 }
