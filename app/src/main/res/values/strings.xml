@@ -110,4 +110,7 @@
     <string name="content_desc_high_temp">High temperature: <xliff:g id="temperature">%1s</xliff:g></string>
     <string name="content_desc_low_temp">Low temperature: <xliff:g id="temperature">%1s</xliff:g></string>
     <string name="content_desc_weather_cond">Weather condition: <xliff:g id="condition">%1s</xliff:g></string>
+
+    <!-- URL address used to retrieve the drawable resources from the internet !-->
+    <string name="format_art_url" translatable="false">https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-xxhdpi/art_<xliff:g id="description">%s</xliff:g>.png</string>
 </resources>
