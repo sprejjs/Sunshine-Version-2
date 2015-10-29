@@ -105,4 +105,9 @@
     <!-- Strings used when displaying the state of the Location in settings -->
     <string name="pref_location_error_description">Invalid Location (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
     <string name="pref_location_unknown_description">Validating Location… (<xliff:g id="location_setting">%1$s</xliff:g>)"</string>
+
+    <!-- Content description -->
+    <string name="content_desc_high_temp">High temperature: <xliff:g id="temperature">%1s</xliff:g></string>
+    <string name="content_desc_low_temp">Low temperature: <xliff:g id="temperature">%1s</xliff:g></string>
+    <string name="content_desc_weather_cond">Weather condition: <xliff:g id="condition">%1s</xliff:g></string>
 </resources>
