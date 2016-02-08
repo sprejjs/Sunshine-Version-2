@@ -52,6 +52,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/detail_accent_label"
             app:layout_columnWeight="1"
+            app:layout_gravity="fill"
             app:layout_rowWeight="1"/>
 
         <TextView
@@ -59,7 +60,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@android:color/white"
             tools:text="38%"
-            app:layout_columnWeight="1"
             app:layout_rowWeight="1"/>
 
         <TextView
@@ -70,6 +70,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/detail_accent_label"
             app:layout_columnWeight="1"
+            app:layout_gravity="fill"
             app:layout_rowWeight="1"/>
 
 
@@ -79,7 +80,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@android:color/white"
             tools:text="995 hPa"
-            app:layout_columnWeight="1"
             app:layout_rowWeight="1"/>
 
         <TextView
@@ -90,6 +90,7 @@
             android:textColor="@color/detail_accent_label"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_columnWeight="1"
+            app:layout_gravity="fill"
             app:layout_rowWeight="1"/>
 
 
@@ -99,7 +100,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@android:color/white"
             tools:text="4km/h NW"
-            app:layout_columnWeight="1"
             app:layout_rowWeight="1"/>
 
     </android.support.v7.widget.GridLayout>
