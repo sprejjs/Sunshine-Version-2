@@ -9,6 +9,8 @@
               android:layout_marginLeft="?attr/listPreferredItemPaddingLeft"
               android:layout_marginRight="?attr/listPreferredItemPaddingRight"
               android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+              android:paddingLeft="@dimen/list_item_extra_padding"
+              android:paddingRight="@dimen/list_item_extra_padding"
               android:background="@drawable/touch_selector"
               android:gravity="center_vertical"
               android:minHeight="?android:attr/listPreferredItemHeight"
