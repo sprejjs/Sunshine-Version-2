@@ -20,7 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
-        android:id="@+id/appbar"
+        android:id="@+id/parallax_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -34,7 +34,7 @@
             android:elevation="0dp"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-        <android.support.v7.widget.Space
+        <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="?attr/listPreferredItemHeight"/>
     </LinearLayout>
@@ -42,5 +42,6 @@
              android:layout_alignParentTop="true"
              android:layout_centerHorizontal="true"
              android:layout_height="match_parent"
-             android:layout_width="@dimen/landscape_forecast_view_width"/>
+             android:layout_width="@dimen/landscape_forecast_view_width"
+        />
 </RelativeLayout>
