@@ -52,6 +52,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private RecyclerView mListView;
     private int mPosition = RecyclerView.NO_POSITION;
     private boolean mUseTodayLayout;
+    private boolean mHoldForTransition;
 
     private static final String SELECTED_KEY = "selected_position";
 
@@ -104,7 +105,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         /**
          * DetailFragmentCallback for when an item has been selected.
          */
-        public void onItemSelected(Uri dateUri);
+        public void onItemSelected(Uri dateUri, ForecastAdapter.ViewHolder vh);
     }
 
     public ForecastFragment() {
@@ -163,7 +164,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         public void onClick(Long date, ForecastAdapter.ViewHolder vh) {
             String locationSetting = Utility.getPreferredLocation(getActivity());
                 ((Callback) getActivity()).onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                            locationSetting, date)
+                            locationSetting, date), vh
                 );
                 mPosition = vh.getAdapterPosition();
             }
@@ -209,6 +210,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        // We hold for transition here just in-case the activity
+        // needs to be re-created. In a standard return transition,
+        // this doesn't actually make a difference.
+        if ( mHoldForTransition ) {
+            getActivity().supportPostponeEnterTransition();
+        }
         getLoaderManager().initLoader(FORECAST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
