@@ -111,7 +111,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         /**
          * DetailFragmentCallback for when an item has been selected.
          */
-        public void onItemSelected(Uri dateUri, ForecastAdapter.ViewHolder vh);
+        void onItemSelected(Uri dateUri, ForecastAdapter.ViewHolder vh);
     }
 
     public ForecastFragment() {
@@ -154,6 +154,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             0, 0);
         mChoiceMode = a.getInt(R.styleable.ForecastFragment_android_choiceMode, AbsListView.CHOICE_MODE_NONE);
         mAutoSelectView = a.getBoolean(R.styleable.ForecastFragment_autoSelectView, false);
+        mHoldForTransition = a.getBoolean(R.styleable.ForecastFragment_sharedElementTransitions, false);
         a.recycle();
     }
 
@@ -180,7 +181,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         public void onClick(Long date, ForecastAdapter.ViewHolder vh) {
             String locationSetting = Utility.getPreferredLocation(getActivity());
                 ((Callback) getActivity()).onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                            locationSetting, date), vh
+                            locationSetting, date),
+                        vh
                 );
                 mPosition = vh.getAdapterPosition();
             }
@@ -225,6 +227,14 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (null != mListView) {
+            mListView.clearOnScrollListeners();
+        }
     }
 
     @Override
@@ -320,7 +330,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         updateEmptyView();
 
-        if ( data.getCount() > 0 ) {
+        if ( data.getCount() == 0 ) {
+            getActivity().supportStartPostponedEnterTransition();
+        } else {
             mListView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
@@ -333,6 +345,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                         RecyclerView.ViewHolder vh = mListView.findViewHolderForAdapterPosition(itemPosition);
                         if ( null != vh && mAutoSelectView ) {
                             mForecastAdapter.selectView( vh );
+                        }
+                        if ( mHoldForTransition ) {
+                            getActivity().supportStartPostponedEnterTransition();
                         }
                         return true;
                     }
