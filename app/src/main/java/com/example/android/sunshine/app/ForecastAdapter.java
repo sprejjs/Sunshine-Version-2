@@ -17,6 +17,7 @@ package com.example.android.sunshine.app;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     final private Context mContext;
     final private ForecastAdapterOnClickHandler mClickHandler;
     final private View mEmptyView;
+    final private ItemChoiceManager mICM;
 
     /**
      * Cache of the children views for a forecast list item.
@@ -72,6 +74,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
             mCursor.moveToPosition(adapterPosition);
             int dateColumnIndex = mCursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE);
             mClickHandler.onClick(mCursor.getLong(dateColumnIndex), this);
+            mICM.onClick(this);
         }
     }
 
@@ -79,14 +82,28 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         void onClick(Long date, ViewHolder vh);
     }
 
-    public ForecastAdapter(Context context, ForecastAdapterOnClickHandler dh, View emptyView) {
+    public ForecastAdapter(Context context, ForecastAdapterOnClickHandler dh, View emptyView, int choiceMode) {
         mContext = context;
         mClickHandler = dh;
         mEmptyView = emptyView;
+        mICM = new ItemChoiceManager(this);
+        mICM.setChoiceMode(choiceMode);
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        mICM.onRestoreInstanceState(savedInstanceState);
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        mICM.onSaveInstanceState(outState);
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {
         mUseTodayLayout = useTodayLayout;
+    }
+
+    public int getSelectedItemPosition() {
+        return mICM.getSelectedItemPosition();
     }
 
     @Override
@@ -171,11 +188,20 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         holder.mLowTempView.setContentDescription(
                 String.format(mContext.getString(R.string.content_desc_low_temp), lowTemp)
         );
+
+        mICM.onBindViewHolder(holder, position);
     }
 
     @Override
     public int getItemViewType(int position) {
         return (position == 0 && mUseTodayLayout) ? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+    }
+
+    public void selectView(RecyclerView.ViewHolder viewHolder) {
+        if ( viewHolder instanceof ViewHolder ) {
+            ViewHolder vfh = (ViewHolder)viewHolder;
+            vfh.onClick(vfh.itemView);
+        }
     }
 
     @Override
