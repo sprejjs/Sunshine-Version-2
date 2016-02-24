@@ -5,6 +5,9 @@
     <!-- This permission is necessary in order for Sunshine to perform network access. -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Permissions required to use the Place Picker -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <!-- Permissions required by the sync adapter -->
     <uses-permission
         android:name="android.permission.READ_SYNC_SETTINGS"/>
@@ -112,6 +115,10 @@
             android:name=".gcm.RegistrationIntentService"
             android:exported="false" >
         </service>
-    </application>
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyChTygpf679miChyK9QUnmkq7-DFzSCMPY"/>
+
+    </application>
 </manifest>
