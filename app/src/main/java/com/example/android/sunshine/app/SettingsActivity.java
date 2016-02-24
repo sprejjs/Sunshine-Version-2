@@ -175,7 +175,6 @@ public class SettingsActivity extends PreferenceActivity
                 // Also store the latitude and longitude so that we can use these to get a precise
                 // result from our weather service. We cannot expect the weather service to
                 // understand addresses that Google formats.
-                // TODO(student) Store the latitude and longitude as float values according to the
                 // keys defined in strings.xml.
                 editor.putFloat(getString(R.string.pref_location_latitude), (float)latLong.latitude);
                 editor.putFloat(getString(R.string.pref_location_longitude), (float)latLong.longitude);
