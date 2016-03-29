@@ -118,6 +118,18 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
+        <!-- Muzei Extension -->
+        <service android:name=".muzei.WeatherMuzeiSource"
+            android:icon="@drawable/ic_muzei"
+            android:label="@string/app_name"
+            android:description="@string/muzei_description" >
+            <intent-filter>
+                <action android:name="com.google.android.apps.muzei.api.MuzeiArtSource" />
+            </intent-filter>
+            <meta-data android:name="color" android:value="@color/colorPrimary" />
+        </service>
+
+
         <!-- The Google Cloud Messaging receiver and services -->
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
